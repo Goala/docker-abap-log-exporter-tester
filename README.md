@@ -1,4 +1,4 @@
-# graylog-GELF-4-sap-netweaver
+# docker-graylog-grafana-loki-stack-4-sap-netweaver
 
 ## based on
 https://hometechhacker.com/how-to-create-a-graylog-container-in-docker/
