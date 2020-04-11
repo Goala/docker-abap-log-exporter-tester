@@ -15,7 +15,7 @@ services:
         hard: -1
     mem_limit: 1g
   graylog:
-    image: graylog/graylog:3.2
+    image: graylog/graylog:3.2.4-1
     environment:
       - GRAYLOG_PASSWORD_SECRET=mfyz11sanane22banane
       # Password: admin
@@ -34,3 +34,4 @@ services:
       - 1514:1514/udp # Syslog UDP
       - 12201:12201 # GELF TCP
       - 12201:12201/udp # GELF UDP
+    hostname: graylog
