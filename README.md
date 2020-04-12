@@ -5,12 +5,6 @@
 docker-compose -f docker-compose-graylog.yml up
 docker-compose -f docker-compose-grafana-loki.yml up
 ```
-## configuration in hosts file
-
-```
-127.0.0.1 graylog
-```
-
 ## utils
 
 ### Loki
