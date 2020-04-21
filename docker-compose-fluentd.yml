@@ -1,43 +1,73 @@
-version: '2'
+version: "3.7"
 services:
-  web:
-    image: httpd
+  fluentd-elasticsearch:
+    image: ruanbekker/fluentd-elasticsearch
+    environment:
+      FLUENTD_CONF: 'fluent.conf'
+      FLUENTD_HOSTNAME: '{{.Node.Hostname}}'
     ports:
-      - "80:80"
-    links:
+      - 24224:24224
+      - 24224:24224/udp
+    user: root
+    configs:
+      - source: fluent-elasticsearch-conf.v1
+        target: /fluentd/etc/fluent.conf
+    networks:
       - fluentd
-    logging:
-      driver: "fluentd"
-      options:
-        fluentd-address: localhost:24224
-        tag: httpd.access
-
-  fluentd:
-    build: ./fluentd
-    volumes:
-      - ./fluentd/conf:/fluentd/etc
-    links:
-      - "elasticsearch"
-    ports:
-      - "24224:24224"
-      - "24224:24224/udp"
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.6.1
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.7.0
     environment:
-      - http.host=0.0.0.0
-      - transport.host=localhost
-      - network.host=0.0.0.0
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    mem_limit: 1g
+      - "cluster.name=es-cluster"
+      - "discovery.zen.minimum_master_nodes=1"
+      - "discovery.zen.ping.unicast.hosts=elasticsearch"
+      - "node.master=true"
+      - "node.data=true"
+      - "node.ingest=true"
+      - "node.name=es-node.{{.Task.Slot}}.{{.Node.Hostname}}"
+      - "LOGSPOUT=ignore"
+    networks:
+       - fluentd
+    ports:
+      - target: 9200
+        published: 9200
+        protocol: tcp
+        mode: host
+    deploy:
+      endpoint_mode: dnsrr
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
 
   kibana:
-    image: kibana:7.6.2
-    links:
-      - "elasticsearch"
+    image: docker.elastic.co/kibana/kibana-oss:${ELASTIC_VERSION:-6.7.0}
+    networks:
+      - fluentd
     ports:
-      - "5601:5601"
+      - target: 5601
+        published: 5601
+        protocol: tcp
+        mode: host
+    environment:
+      - SERVER_NAME=kibana.${DOMAIN:-localhost}
+      - ELASTICSEARCH_URL=${ELASTICSEARCH_HOST:-http://elasticsearch}:${ELASTICSEARCH_PORT:-9200}
+      - ELASTICSEARCH_HOSTS=${ELASTICSEARCH_HOST:-http://elasticsearch}:${ELASTICSEARCH_PORT:-9200}
+    deploy:
+      mode: replicated
+      replicas: 1
+
+networks:
+  fluentd:
+    external: true
+
+configs:
+  fluent-elasticsearch-conf.v1:
+    file: ./fluentd/fluentd.conf
+
+# source: https://github.com/bekkerstacks/elasticsearch-fluentd-kibana

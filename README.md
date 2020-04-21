@@ -35,3 +35,5 @@ https://mfyz.com/quick-and-dirty-set-up-graylog-in-5-minutes-with-docker/
 ### fluentd
 
 https://docs.fluentd.org/v/0.12/container-deployment/docker-compose
+
+https://sysadmins.co.za/shipping-your-logs-from-docker-swarm-to-elasticsearch-with-fluentd/
