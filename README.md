@@ -19,6 +19,9 @@ curl -v -H "Content-Type: application/json" -XPOST -s "http://localhost:3100/api
 ```
 curl -v -X POST -H 'Content-Type: application/json' -d '{ "version": "1.1", "host": "example.org", "short_message": "A short message", "level": 5, "_some_info": "foo" }' 'http://graylog:12201/gelf'
 ```
+### fluentd
+
+curl -X POST -d 'json={"json":"message"}' http://localhost:9880/sample.test
 
 ## based on
 
@@ -34,6 +37,4 @@ https://mfyz.com/quick-and-dirty-set-up-graylog-in-5-minutes-with-docker/
 
 ### fluentd
 
-https://docs.fluentd.org/v/0.12/container-deployment/docker-compose
-
-https://sysadmins.co.za/shipping-your-logs-from-docker-swarm-to-elasticsearch-with-fluentd/
+https://docs.fluentd.org/v/0.12/container-deployment/install-by-docker
