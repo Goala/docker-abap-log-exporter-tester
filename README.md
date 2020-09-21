@@ -6,6 +6,13 @@ docker-compose -f docker-compose-graylog.yml up
 docker-compose -f docker-compose-grafana-loki.yml up
 docker-compose -f docker-compose-fluentd.yml up
 ```
+
+## updates
+
+### graylog
+
+plugins: https://docs.graylog.org/en/3.3/pages/integrations/setup.html
+
 ## utils
 
 ### Loki
@@ -34,6 +41,8 @@ https://github.com/grafana/loki/tree/master/production
 https://hometechhacker.com/how-to-create-a-graylog-container-in-docker/
 
 https://mfyz.com/quick-and-dirty-set-up-graylog-in-5-minutes-with-docker/
+
+https://github.com/pecigonzalo/graylog-compose/blob/master/docker-compose.yml
 
 ### fluentd
 
