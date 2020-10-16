@@ -28,7 +28,9 @@ curl -v -X POST -H 'Content-Type: application/json' -d '{ "version": "1.1", "hos
 ```
 ### fluentd
 
+```
 curl -X POST -d 'json={"json":"message"}' http://localhost:9880/sample.test
+```
 
 ## based on
 
